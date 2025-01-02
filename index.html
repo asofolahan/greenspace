@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenSpaces - Urban Farming in Lagos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Variant content configuration
+        const variants = {
+            spaceOwners: {
+                id: 'spaceOwners',
+                heading: 'Transform Your Space into a Thriving Urban Farm',
+                subheading: 'Turn unused spaces into productive vertical farms earning ₦50,000-200,000 monthly',
+                ctaText: 'Start Your Urban Farm',
+                trustIndicators: [
+                    { value: '₦150K', label: 'Starter Kit' },
+                    { value: '24/7', label: 'Technical Support' },
+                    { value: '₦200K', label: 'Monthly Potential' }
+                ]
+            },
+            consumers: {
+                id: 'consumers',
+                heading: 'Fresh, Local Produce at Your Doorstep',
+                subheading: 'Get pesticide-free vegetables grown right here in Lagos, 30% below market prices',
+                ctaText: 'Order Fresh Produce',
+                trustIndicators: [
+                    { value: '24hrs', label: 'Farm to Table' },
+                    { value: '30%', label: 'Price Savings' },
+                    { value: '100%', label: 'Local Grown' }
+                ]
+            },
+            community: {
+                id: 'community',
+                heading: 'Join Lagos's Urban Farming Revolution',
+                subheading: 'Be part of a sustainable food system that creates jobs and improves food security',
+                ctaText: 'Join the Movement',
+                trustIndicators: [
+                    { value: '500+', label: 'Active Farms' },
+                    { value: '40%', label: 'Less Food Miles' },
+                    { value: '1000+', label: 'Jobs Created' }
+                ]
+            }
+        };
+
+        // Function to get random variant or use URL parameter
+        function getVariant() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const variantParam = urlParams.get('variant');
+            
+            if (variantParam && variants[variantParam]) {
+                return variants[variantParam];
+            }
+            
+            const variantKeys = Object.keys(variants);
+            const randomIndex = Math.floor(Math.random() * variantKeys.length);
+            return variants[variantKeys[randomIndex]];
+        }
+
+        // Function to update content based on variant
+        function updateContent(variant) {
+            document.getElementById('main-heading').textContent = variant.heading;
+            document.getElementById('sub-heading').textContent = variant.subheading;
+            document.getElementById('cta-button').textContent = variant.ctaText;
+            
+            const trustContainer = document.getElementById('trust-indicators');
+            trustContainer.innerHTML = variant.trustIndicators.map(indicator => `
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-emerald-600">${indicator.value}</div>
+                    <div class="mt-2 text-sm text-gray-600">${indicator.label}</div>
+                </div>
+            `).join('');
+
+            // Log variant for analytics
+            console.log('Variant displayed:', variant.id);
+            // Send to analytics (implement your tracking here)
+            trackVariant(variant.id);
+        }
+
+        // Analytics tracking function
+        function trackVariant(variantId) {
+            // Implement your analytics tracking here
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'variant_view', {
+                    'variant_id': variantId
+                });
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const variant = getVariant();
+            updateContent(variant);
+
+            // Handle form submission
+            document.getElementById('farmForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const data = {
+                    variant: variant.id,
+                    timestamp: new Date().toISOString(),
+                };
+                
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+
+                // Log submission
+                console.log('Form submitted:', data);
+                // Here you would send to your backend
+                alert('Thank you for your interest! We'll contact you soon.');
+            });
+        });
+    </script>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-white shadow-sm">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <!-- Logo SVG -->
+                        <svg class="h-8 w-8 text-emerald-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H7"/>
+                            <path d="M12 22V2"/>
+                        </svg>
+                        <span class="ml-2 text-2xl font-bold text-gray-900">GreenSpaces</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <!-- Hero Section -->
+            <div class="text-center">
+                <h1 id="main-heading" class="text-4xl font-bold text-gray-900 mb-4">
+                    <!-- Dynamically inserted -->
+                </h1>
+                <p id="sub-heading" class="text-xl text-gray-600 mb-8">
+                    <!-- Dynamically inserted -->
+                </p>
+            </div>
+
+            <!-- Form Section -->
+            <div class="max-w-xl mx-auto bg-white shadow rounded-lg p-8">
+                <form id="farmForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Full Name
+                        </label>
+                        <input type="text" name="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Email
+                        </label>
+                        <input type="email" name="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Phone Number
+                        </label>
+                        <input type="tel" name="phone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">
+                            Interest
+                        </label>
+                        <select name="interest" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                            <option value="">Select Your Interest</option>
+                            <option value="space-owner">I want to start a farm</option>
+                            <option value="consumer">I want to buy fresh produce</option>
+                            <option value="partner">I want to partner with GreenSpaces</option>
+                        </select>
+                    </div>
+
+                    <div id="space-details" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Space Type (if applicable)
+                            </label>
+                            <select name="spaceType" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                <option value="">Select Space Type</option>
+                                <option value="rooftop">Rooftop</option>
+                                <option value="backyard">Backyard</option>
+                                <option value="spare-room">Spare Room</option>
+                                <option value="balcony">Balcony</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">
+                                Approximate Space Size (sqm)
+                            </label>
+                            <input type="number" name="spaceSize" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" id="cta-button" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                            <!-- Dynamically inserted -->
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Trust Indicators -->
+            <div id="trust-indicators" class="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
+                <!-- Dynamically inserted -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white mt-12 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-gray-500 text-sm">
+                © 2025 GreenSpaces. Transforming Lagos through urban farming.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
